@@ -27,12 +27,25 @@ def index():
         choice(templates), items={"name": "", "date": ""}
     )  # Redireciona para Materialize por padrão
 
+#https://hotleak.vip/laararose
+#https://thothub.to/search/lara%C2%A0rose/
+#https://fapopedia.net/lara-rose-nude-leaks/
+#https://leaksmodels.com/xfsearch/model/Rose%20%7C%20%40laroseee/page/2/
+#https://hotleak.vip/creators
+#https://xcreators.link/lararosehttps://xcreators.link/lararose
+#https://hotleak.vip/sunnyrayxo
+#https://hotleak.vip/defiantpanda
+#https://hotleak.vip/theemilylynne
+#https://thothub.to/videos/691082/saiilormoonxxx-b-g-fuck/
+#https://thothub.to/tags/kaitlyn-krems/
+#
 
 # Rota para upload de arquivos
 @app.route("/upload", methods=["POST"])
 def upload_file():
     # Verifica se existe a chave 'file' no request e se arquivos foram selecionados
-    if "file" not in request.files:
+    print(request.files)
+    if 'file' not in request.files:
         return "Nenhum arquivo selecionado!", 400
 
     # Obtém a lista de arquivos enviados

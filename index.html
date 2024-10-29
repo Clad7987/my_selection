@@ -17,63 +17,45 @@
 		/>
 
 		<style>
-			/* Estilização da galeria */
 			.gallery {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Definindo 5 colunas */
-				grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
-				grid-row-start: auto;
-				gap: 15px; /* Espaçamento entre os itens */
+				column-count: 5;
+				column-gap: 15px;
 				margin: 20px;
-			}
-
-			.gallery img,
-			.gallery video {
+				/* display: inline-flex;
+				flex-wrap: wrap;
 				width: 100%;
-				border-radius: 8px;
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-				cursor: pointer; /* Muda o cursor para indicar que é clicável */
-				transition: transform 0.3s ease-in-out; /* Transição para efeito de zoom */
+				padding: 0 1rem;
+				justify-content: center; */
 			}
+			/* .gallery a {
+				flex-basis: 15%;
+				margin: 5px;
+				height: fit-content;
+				width: fit-content;
+			}
+			
+			.gallery a .img:hover {
+				transform: scale(.95);
+			}
+			.gallery .full {
+				flex-basis: 100%;
+			} */
 
 			.gallery a {
 				height: fit-content;
+				width: fit-content;
 			}
 
-			/* Efeito de zoom ao passar o mouse */
-			.gallery img:hover,
-			.gallery video:hover {
-				transform: scale(1.05);
+			.gallery a .img:hover {
+				transform: scale(.95);
 			}
 
-			/* Estilização do modal */
-			.modal.is-active {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-			.modal-background {
-				background-color: rgba(0, 0, 0, 0.7);
-			}
-			.modal-content img {
-				max-height: 90vh; /* Limita a altura da imagem ao tamanho da tela */
-				max-width: 90vw; /* Limita a largura da imagem ao tamanho da tela */
-			}
-
-			/* Ajuste da galeria para dispositivos menores */
-			@media (max-width: 768px) {
-				.gallery {
-					grid-template-columns: repeat(
-						2,
-						1fr
-					); /* Duas colunas em dispositivos menores */
-				}
-			}
-
-			@media (max-width: 480px) {
-				.gallery {
-					grid-template-columns: 1fr; /* Uma coluna em dispositivos menores */
-				}
+			.gallery a .img {
+				width: 100%;
+				margin-bottom: 5px;
+				transition: transform .3s ease-in-out;
+				border-radius: 8px;
+				box-shadow: 0 4px 8px rgba(0,0,0,.2);
 			}
 		</style>
 	</head>
@@ -139,7 +121,7 @@
 					.then((data) => {
 						allData = data; // Armazena os dados no escopo global
 						createTabs(data); // Cria abas com base nas chaves do JSON
-						loadGallery("all"); // Carrega todas as imagens inicialmente
+						loadGallery("reddit"); // Carrega todas as imagens inicialmente
 						adjustImages();
 					})
 					.catch((error) =>
@@ -196,24 +178,12 @@
 			}
 
 			function adjustImages(image) {
-				image.parentElement.style.gridRowStart = 'auto'
-			// 	const width = image.width
-			// 	const height = image.height
-			// 	if (width > height){
-			// 		image.parentElement.style.gridColumn = 'span 50'
-			// 		image.parentElement.style.gridRow = 'span 10'
-			// 	}
-			// 	else {
-			// 		if (height > 750) {
-			// 			image.parentElement.style.gridRow = 'span 40'
-			// 			// image.parentElement.style.gridColumn = 'span 40'
-			// 		}
-			// 		else if (height > 500)
-			// 			image.parentElement.style.gridRow = 'span 30'
-			// 		else if (height > 250)
-			// 			image.parentElement.style.gridRow = 'span 20'
-			// 		image.parentElement.style.gridColumn = 'span 10'
-			// 	}
+				const width = image.width
+				const height = image.height
+				if (width > height){
+					image.classList.add('full')
+					image.parentElement.classList.add('full')
+				}
 			}
 
 			// Função auxiliar para carregar imagens e vídeos de uma categoria
@@ -229,6 +199,7 @@
 					imgElement.addEventListener("click", () =>
 						openModal(item.path)
 					);
+					imgElement.classList.add('img')
 					imgElement.addEventListener('load', () => adjustImages(imgElement))
 					link.appendChild(imgElement);
 					gallery.appendChild(link);

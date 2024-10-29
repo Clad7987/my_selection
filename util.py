@@ -90,7 +90,7 @@ def remove_duplicated():
         new_data[source]["images"] = filter_oldest(new_data[source]["images"])
         new_data[source]["videos"] = filter_oldest(new_data[source]["videos"])
 
-    with open("data.json", "w") as file:
+    with open("data/data.json", "w") as file:
         json.dump(new_data, file)
 
 
