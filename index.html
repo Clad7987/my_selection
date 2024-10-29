@@ -5,72 +5,75 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Image Gallery</title>
 
-		<!-- Importing Bulma CSS -->
+		<!-- Importando Bulma CSS -->
 		<link
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
 		/>
-		<!-- Importing Font Awesome for icons -->
+		<!-- Importando Font Awesome para ícones -->
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
 		/>
 
 		<style>
-			/* Gallery styling */
+			/* Estilização da galeria */
 			.gallery {
-				column-count: 5; /* Masonry: Define the number of columns */
-				column-gap: 15px;
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Definindo 5 colunas */
+				grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
+				grid-row-start: auto;
+				gap: 15px; /* Espaçamento entre os itens */
 				margin: 20px;
 			}
-			.gallery img {
+
+			.gallery img,
+			.gallery video {
 				width: 100%;
-				margin-bottom: 15px;
-				transition: transform 0.3s ease-in-out;
 				border-radius: 8px;
 				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+				cursor: pointer; /* Muda o cursor para indicar que é clicável */
+				transition: transform 0.3s ease-in-out; /* Transição para efeito de zoom */
 			}
-			/* Zoom effect on hover */
-			.gallery img:hover {
+
+			.gallery a {
+				height: fit-content;
+			}
+
+			/* Efeito de zoom ao passar o mouse */
+			.gallery img:hover,
+			.gallery video:hover {
 				transform: scale(1.05);
 			}
 
-			/* Adjust column count for smaller screens */
+			/* Estilização do modal */
+			.modal.is-active {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.modal-background {
+				background-color: rgba(0, 0, 0, 0.7);
+			}
+			.modal-content img {
+				max-height: 90vh; /* Limita a altura da imagem ao tamanho da tela */
+				max-width: 90vw; /* Limita a largura da imagem ao tamanho da tela */
+			}
+
+			/* Ajuste da galeria para dispositivos menores */
 			@media (max-width: 768px) {
 				.gallery {
-					column-count: 3;
+					grid-template-columns: repeat(
+						2,
+						1fr
+					); /* Duas colunas em dispositivos menores */
 				}
 			}
 
-			@media (max-width: 576px) {
+			@media (max-width: 480px) {
 				.gallery {
-					column-count: 1;
+					grid-template-columns: 1fr; /* Uma coluna em dispositivos menores */
 				}
-			}
-
-			/* Footer styling */
-			footer {
-				background-color: #363636;
-				color: black;
-				padding: 20px 0;
-			}
-			footer .content {
-				text-align: center;
-			}
-			footer .content p {
-				margin: 5px 0;
-			}
-			footer .social-icons {
-				margin-top: 10px;
-			}
-			footer .social-icons a {
-				color: black;
-				margin: 0 10px;
-				font-size: 1.5em;
-				transition: color 0.3s;
-			}
-			footer .social-icons a:hover {
-				color: #00d1b2; /* Bulma green color */
 			}
 		</style>
 	</head>
@@ -78,63 +81,218 @@
 		<section class="section">
 			<div class="container">
 				<h1 class="title has-text-centered">Image Gallery</h1>
+				<!-- Tabs para categorias -->
+				<div class="tabs is-centered" id="tabs">
+					<ul></ul>
+					<!-- As abas serão preenchidas dinamicamente -->
+				</div>
+
 				<div class="gallery" id="gallery"></div>
-				<!-- Dynamic gallery -->
+				<!-- Galeria dinâmica -->
 			</div>
 		</section>
 
-		<!-- Nice Footer -->
+		<!-- Modal -->
+		<div class="modal" id="imageModal">
+			<div class="modal-background"></div>
+			<div class="modal-content">
+				<img id="modalImage" src="" alt="Imagem" />
+				<button id="slideshowBtn" class="button is-primary">
+					Iniciar Slideshow
+				</button>
+			</div>
+			<button
+				class="modal-close is-large"
+				aria-label="close"
+				id="closeModal"
+			></button>
+		</div>
+
+		<!-- Rodapé legal -->
 		<footer class="footer">
 			<div class="content has-text-centered">
 				<p><strong>Image Gallery</strong> by Clad7987.</p>
 				<p>© 2024 All rights reserved.</p>
 
 				<div class="social-icons">
-					<!-- Social media icons -->
-					<a href="#" target="_blank" title="Facebook">
-						<i class="fab fa-facebook"></i>
-					</a>
-					<a href="#" target="_blank" title="Instagram">
-						<i class="fab fa-instagram"></i>
-					</a>
-					<a href="#" target="_blank" title="Twitter">
-						<i class="fab fa-twitter"></i>
-					</a>
+					<!-- Ícones de redes sociais -->
+					<a href="#" target="_blank" title="Facebook"
+						><i class="fab fa-facebook"></i
+					></a>
+					<a href="#" target="_blank" title="Instagram"
+						><i class="fab fa-instagram"></i
+					></a>
+					<a href="#" target="_blank" title="Twitter"
+						><i class="fab fa-twitter"></i
+					></a>
 				</div>
 			</div>
 		</footer>
 
 		<script>
-			// Function to load JSON with images
+			let allData = {}; // Variável global para armazenar dados do JSON
+
+			// Função para carregar JSON com imagens e vídeos
 			function loadImages() {
-				fetch("data/data.json") // Path to the JSON file
-					.then((response) => response.json()) // Convert response to JSON
+				fetch("data/data.json") // Caminho para o arquivo JSON
+					.then((response) => response.json()) // Converter resposta para JSON
 					.then((data) => {
-						const gallery = document.getElementById("gallery");
-
-						// Clear the gallery to avoid duplication
-						gallery.innerHTML = "";
-
-						// Sort images by date (create_at), most recent first
-						data.images.sort(
-							(a, b) =>
-								new Date(b.create_at) - new Date(a.create_at)
-						);
-
-						// For each image in the JSON, create an img element and add it to the gallery
-						data.images.map((image) => {
-							const imgElement = document.createElement("img");
-							imgElement.src = image.path;
-							gallery.appendChild(imgElement);
-						});
+						allData = data; // Armazena os dados no escopo global
+						createTabs(data); // Cria abas com base nas chaves do JSON
+						loadGallery("all"); // Carrega todas as imagens inicialmente
+						adjustImages();
 					})
 					.catch((error) =>
-						console.error("Error loading images:", error)
+						console.error("Error loading images and videos:", error)
 					);
 			}
 
-			// Call the function to load images when the page loads
-			window.onload = loadImages;
+			// Função para criar abas
+			function createTabs(data) {
+				const tabsList = document.querySelector("#tabs ul");
+				tabsList.innerHTML = ""; // Limpa abas existentes
+
+				const allTab = document.createElement("li");
+				allTab.classList.add("is-active");
+				allTab.innerHTML = `<a onclick="loadGallery('all')">Todas as Categorias</a>`;
+				allTab.setAttribute("id", "all");
+				tabsList.appendChild(allTab);
+
+				for (const category in data) {
+					if (data.hasOwnProperty(category)) {
+						const tab = document.createElement("li");
+						tab.setAttribute("id", category);
+						tab.innerHTML = `<a onclick="loadGallery('${category}')">${
+							category.charAt(0).toUpperCase() + category.slice(1)
+						}</a>`;
+						tabsList.appendChild(tab);
+					}
+				}
+			}
+
+			// Função para carregar imagens de uma categoria específica
+			function loadGallery(category) {
+				const gallery = document.getElementById("gallery");
+				gallery.innerHTML = ""; // Limpa a galeria
+
+				document.getElementById(category).classList.add("is-active");
+				document
+					.querySelectorAll(".is-active")
+					.forEach((item) =>
+						item.id !== category
+							? item.classList.remove("is-active")
+							: ""
+					);
+
+				if (category === "all") {
+					for (const cat in allData) {
+						if (allData.hasOwnProperty(cat)) {
+							loadCategoryImages(allData[cat], gallery);
+						}
+					}
+				} else if (allData[category]) {
+					loadCategoryImages(allData[category], gallery);
+				}
+			}
+
+			function adjustImages(image) {
+				image.parentElement.style.gridRowStart = 'auto'
+			// 	const width = image.width
+			// 	const height = image.height
+			// 	if (width > height){
+			// 		image.parentElement.style.gridColumn = 'span 50'
+			// 		image.parentElement.style.gridRow = 'span 10'
+			// 	}
+			// 	else {
+			// 		if (height > 750) {
+			// 			image.parentElement.style.gridRow = 'span 40'
+			// 			// image.parentElement.style.gridColumn = 'span 40'
+			// 		}
+			// 		else if (height > 500)
+			// 			image.parentElement.style.gridRow = 'span 30'
+			// 		else if (height > 250)
+			// 			image.parentElement.style.gridRow = 'span 20'
+			// 		image.parentElement.style.gridColumn = 'span 10'
+			// 	}
+			}
+
+			// Função auxiliar para carregar imagens e vídeos de uma categoria
+			function loadCategoryImages(data, gallery) {
+				// Processar imagens
+				data.images.forEach((item) => {
+					const link = document.createElement("a");
+					link.setAttribute("href", item.path);
+					link.setAttribute("download", "");
+					const imgElement = document.createElement("img");
+					imgElement.src = item.path;
+					imgElement.setAttribute("data-image", item.path);
+					imgElement.addEventListener("click", () =>
+						openModal(item.path)
+					);
+					imgElement.addEventListener('load', () => adjustImages(imgElement))
+					link.appendChild(imgElement);
+					gallery.appendChild(link);
+				});
+
+				// Processar vídeos
+				data.videos.forEach((item) => {
+					const videoElement = document.createElement("video");
+					videoElement.src = item.path;
+					videoElement.controls = true; // Adiciona controles de vídeo (play, pause, etc.)
+					videoElement.style.gridColumn = "span 5"; // Ocupa todas as colunas
+					videoElement.style.width = "100%"; // Largura total do container
+					videoElement.style.margin = "20px 0"; // Adiciona margem para separar do conteúdo
+					videoElement.style.borderRadius = "8px"; // Opcional: mantém um estilo similar ao das imagens
+					videoElement.style.boxShadow =
+						"0 4px 8px rgba(0, 0, 0, 0.2)"; // Adiciona efeito de sombra
+					gallery.appendChild(videoElement);
+				});
+			}
+
+			// Função para abrir modal com a imagem clicada
+			function openModal(imagePath) {
+				const modal = document.getElementById("imageModal");
+				const modalImage = document.getElementById("modalImage");
+				const slideshowBtn = document.getElementById("slideshowBtn");
+				let slideshowInterval;
+
+				modalImage.src = imagePath; // Define o caminho da imagem no modal
+				modal.classList.add("is-active"); // Abre o modal
+
+				// Fechar o modal
+				document.getElementById("closeModal").onclick = () => {
+					modal.classList.remove("is-active"); // Fecha o modal
+					clearInterval(slideshowInterval); // Para o slideshow
+					slideshowBtn.textContent = "Iniciar Slideshow"; // Reseta o botão
+					slideshowBtn.disabled = false; // Habilita o botão novamente
+				};
+
+				// Iniciar slideshow
+				slideshowBtn.onclick = () => {
+					if (slideshowBtn.textContent === "Iniciar Slideshow") {
+						const images = Array.from(
+							document.querySelectorAll(".gallery img")
+						).map((img) => img.src);
+						let currentIndex = images.indexOf(imagePath); // Começa com a imagem atual
+
+						slideshowBtn.textContent = "Parar Slideshow";
+						slideshowBtn.disabled = true; // Desabilita o botão
+
+						slideshowInterval = setInterval(() => {
+							currentIndex = (currentIndex + 1) % images.length; // Círculo através das imagens
+							modalImage.src = images[currentIndex];
+						}, 2000); // Altera a imagem a cada 2 segundos
+					} else {
+						clearInterval(slideshowInterval);
+						slideshowBtn.textContent = "Iniciar Slideshow";
+						slideshowBtn.disabled = false; // Habilita o botão novamente
+					}
+				};
+			}
+
+			// Chamar a função para carregar imagens quando a página carrega
+			window.addEventListener("DOMContentLoaded", () => loadImages());
+			window.addEventListener("load", () => adjustImages());
 		</script>
 	</body>
 </html>

@@ -9,8 +9,25 @@
 			href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
 			rel="stylesheet"
 		/>
+		<style>
+			.modal.is-active {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.modal-background {
+				background-color: rgba(0, 0, 0, 0.7);
+			}
+			.modal-content img {
+				max-height: 90vh; /* Limita a altura da imagem ao tamanho da tela */
+				max-width: 90vw; /* Limita a largura da imagem ao tamanho da tela */
+			}
+			.slideshow {
+				display: none; /* Esconde o slideshow inicialmente */
+			}
+		</style>
 	</head>
-	<body>
+	<body class="m-3">
 		<div class="container">
 			<h3 class="title">Upload de Arquivo - Bulma</h3>
 			<form action="/upload" method="POST" enctype="multipart/form-data">
@@ -44,17 +61,98 @@
 				<tbody>
 					<!-- Loop de arquivos enviados -->
 					<tr>
-						<td>example.txt</td>
+						<td>
+							<a
+								href="#"
+								class="image-link"
+								data-image="example.jpg"
+								>example.txt</a
+							>
+						</td>
 						<td>2024-09-20</td>
 					</tr>
 					{% for item in items %}
 					<tr>
-						<td>{{ item.name }}</td>
+						<td>
+							<a
+								href="#"
+								class="image-link"
+								data-image="{{ item.image }}"
+							>
+								{{ item.name }}
+							</a>
+						</td>
 						<td>{{ item.date }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
 			</table>
+
+			<!-- Modal -->
+			<div class="modal" id="imageModal">
+				<div class="modal-background"></div>
+				<div class="modal-content">
+					<img id="modalImage" src="" alt="Imagem" />
+					<button id="slideshowBtn" class="button is-primary">
+						Iniciar Slideshow
+					</button>
+				</div>
+				<button
+					class="modal-close is-large"
+					aria-label="close"
+					id="closeModal"
+				></button>
+			</div>
 		</div>
+
+		<script>
+			const imageLinks = document.querySelectorAll(".image-link");
+			const modal = document.getElementById("imageModal");
+			const modalImage = document.getElementById("modalImage");
+			const closeModal = document.getElementById("closeModal");
+			const slideshowBtn = document.getElementById("slideshowBtn");
+			let slideshowInterval;
+
+			// Abrir modal ao clicar na imagem
+			imageLinks.forEach((link) => {
+				link.addEventListener("click", (event) => {
+					event.preventDefault();
+					const imageSrc = link.getAttribute("data-image");
+					modalImage.src = imageSrc; // Defina o caminho da imagem
+					modal.classList.add("is-active");
+				});
+			});
+
+			// Fechar o modal
+			closeModal.addEventListener("click", () => {
+				modal.classList.remove("is-active");
+				clearInterval(slideshowInterval); // Para o slideshow ao fechar
+				slideshowBtn.textContent = "Iniciar Slideshow"; // Reseta o botão
+				slideshowBtn.disabled = false; // Habilita o botão novamente
+			});
+
+			// Iniciar slideshow
+			slideshowBtn.addEventListener("click", () => {
+				if (slideshowBtn.textContent === "Iniciar Slideshow") {
+					slideshowBtn.textContent = "Parar Slideshow";
+					slideshowBtn.disabled = true; // Desabilita o botão
+					let currentIndex = 0;
+
+					const images = Array.from(imageLinks).map((link) =>
+						link.getAttribute("data-image")
+					);
+					modalImage.src = images[currentIndex]; // Define a primeira imagem
+
+					slideshowInterval = setInterval(() => {
+						currentIndex = (currentIndex + 1) % images.length; // Círculo através das imagens
+						modalImage.src = images[currentIndex];
+					}, 2000); // Altere a imagem a cada 2 segundos
+				} else {
+					clearInterval(slideshowInterval);
+					slideshowBtn.textContent = "Iniciar Slideshow";
+					slideshowBtn.disabled = false; // Habilita o botão novamente
+				}
+			});
+		</script>
 	</body>
 </html>
