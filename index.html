@@ -33,7 +33,7 @@
 				height: fit-content;
 				width: fit-content;
 			}
-			
+
 			.gallery a .img:hover {
 				transform: scale(.95);
 			}
@@ -190,19 +190,25 @@
 			function loadCategoryImages(data, gallery) {
 				// Processar imagens
 				data.images.forEach((item) => {
-					const link = document.createElement("a");
-					link.setAttribute("href", item.path);
-					link.setAttribute("download", "");
-					const imgElement = document.createElement("img");
-					imgElement.src = item.path;
-					imgElement.setAttribute("data-image", item.path);
-					imgElement.addEventListener("click", () =>
-						openModal(item.path)
-					);
-					imgElement.classList.add('img')
-					imgElement.addEventListener('load', () => adjustImages(imgElement))
-					link.appendChild(imgElement);
-					gallery.appendChild(link);
+					if (!item.path.inclues("iframe")) {
+						const link = document.createElement("a");
+						link.setAttribute("href", item.path);
+						link.setAttribute("download", "");
+						const imgElement = document.createElement("img");
+						imgElement.src = item.path;
+						imgElement.setAttribute("data-image", item.path);
+						imgElement.addEventListener("click", () =>
+							openModal(item.path)
+						);
+						imgElement.classList.add('img')
+						imgElement.addEventListener('load', () => adjustImages(imgElement))
+						link.appendChild(imgElement);
+						gallery.appendChild(link);
+					} else {
+						const link = document.createElement("a")
+						link.innerHTML = item.path
+						gallery.appendChild(link)
+					}
 				});
 
 				// Processar vídeos
