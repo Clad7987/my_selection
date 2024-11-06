@@ -133,6 +133,7 @@ def main(obj=None, is_first_run=True):
         import util
 
         util.remove_duplicated()
+        util.part_split()
 
 
 if __name__ == "__main__":

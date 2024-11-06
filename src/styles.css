@@ -1,0 +1,22 @@
+.gallery {
+	column-count: 5;
+	column-gap: 15px;
+	margin: 20px;
+
+	& a {
+		height: fit-content;
+		width: fit-content;
+
+		& img {
+			width: 100%;
+			margin-bottom: 5px;
+			transition: transform 0.3s ease-in-out;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+		}
+		& img:hover {
+			transform: scale(0.95);
+		}
+	}
+}
