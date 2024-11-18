@@ -16,13 +16,23 @@
 </head>
 
 <body>
-	<section class="section">
-		<div class="container">
-			<h1 class="title has-text-centered">Image Gallery</h1>
+	<section class="">
+		<div class="has-background-primary-00">
+			<h1 class="title has-text-centered text-white">Image Gallery</h1>
 			<!-- Tabs para categorias -->
 			<div class="tabs is-centered" id="tabs">
 				<ul></ul>
 				<!-- As abas serão preenchidas dinamicamente -->
+			</div>
+
+			<div  class="select is-rounded">
+				<select  id="columnCount" onchange="changeColumnCount()">
+					<option value="1">1</option>
+					<option value="3">3</option>
+					<option selected value="5">5</option>
+					<option value="10">10</option>
+					<option value="15">15</option>
+				</select>
 			</div>
 
 			<div class="gallery" id="gallery"></div>

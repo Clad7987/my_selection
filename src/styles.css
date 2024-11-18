@@ -1,7 +1,16 @@
+.text-white {
+	color: white !important;
+}
+
+.has-background-primary-00 {
+	background-color: #001f1a;
+padding: 5px;
+}
+
 .gallery {
 	column-count: 5;
-	column-gap: 15px;
-	margin: 20px;
+	column-gap: 5px;
+	margin: 0;
 
 	& a {
 		height: fit-content;
@@ -9,9 +18,9 @@
 
 		& img {
 			width: 100%;
-			margin-bottom: 5px;
+			/* margin-bottom: 5px; */
 			transition: transform 0.3s ease-in-out;
-			border-radius: 8px;
+			border-radius: 5px;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
 		}

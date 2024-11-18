@@ -74,6 +74,8 @@ def remove_duplicated():
         unique_items = {}
         for item in items:
             path = item["path"]
+            if type(path) == list:
+                path = path[0]
             create_at = datetime.strptime(item["create_at"], "%Y-%m-%d %H:%M:%S")
 
             if path in unique_items:
@@ -181,8 +183,10 @@ def part_split():
     # Itera sobre 'images' e 'videos' e divide os arquivos grandes
     for key in data:
         for value in data.get(key, {}).get("images", []):
+            if type(value.get('path')) == list: continue
             split_to_gh(value)
         for value in data.get(key, {}).get("videos", []):
+            if type(value.get('path')) == list: continue
             split_to_gh(value)
 
     # Salva o JSON atualizado de volta no arquivo

@@ -7,7 +7,7 @@ function loadImages() {
 		.then((data) => {
 			allData = data; // Armazena os dados no escopo global
 			createTabs(data); // Cria abas com base nas chaves do JSON
-			loadGallery("special"); // Carrega todas as imagens inicialmente
+			loadGallery("tumblr"); // Carrega todas as imagens inicialmente
 			adjustImages();
 		})
 		.catch((error) =>
@@ -24,7 +24,7 @@ function createTabs(data) {
 
 	const allTab = document.createElement("li");
 	allTab.classList.add("is-active");
-	allTab.innerHTML = `<a onclick="loadGallery('all')">All ${allLength}</a>`;
+	allTab.innerHTML = `<a class="text-white" onclick="loadGallery('all')">All ${allLength}</a>`;
 	allTab.setAttribute("id", "all");
 	tabsList.appendChild(allTab);
 
@@ -32,7 +32,7 @@ function createTabs(data) {
 		if (data.hasOwnProperty(category)) {
 			const tab = document.createElement("li");
 			tab.setAttribute("id", category);
-			tab.innerHTML = `<a onclick="loadGallery('${category}')">${
+			tab.innerHTML = `<a class="text-white" onclick="loadGallery('${category}')">${
 				category.charAt(0).toUpperCase() + category.slice(1)
 			} (${(
 				data[category].images.length + data[category].videos.length
@@ -79,7 +79,7 @@ function adjustImages(image) {
 		gallery.style.scrollSnapType = 'y mandatory'
 
 	} else {
-		gallery.style.columnCount = 5
+		gallery.style.columnCount = 10
 		const width = image.width;
 		const height = image.height;
 		if (width > height) {
@@ -214,6 +214,12 @@ function openModal(imagePath) {
 	};
 }
 
+function changeColumnCount() {
+	let cc = document.getElementById("columnCount").value;
+	document.getElementById("gallery").style.columnCount = parseInt(cc);
+}
+
 // Chamar a função para carregar imagens quando a página carrega
 window.addEventListener("DOMContentLoaded", () => loadImages());
 window.addEventListener("load", () => adjustImages());
+
