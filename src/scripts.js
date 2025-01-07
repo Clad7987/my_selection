@@ -79,7 +79,7 @@ function adjustImages(image) {
 		gallery.style.scrollSnapType = 'y mandatory'
 
 	} else {
-		gallery.style.columnCount = 10
+		gallery.style.columnCount = 3
 		const width = image.width;
 		const height = image.height;
 		if (width > height) {
