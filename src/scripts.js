@@ -111,7 +111,36 @@ async function loadCategoryImages(data, gallery) {
 	}
 
 	// Processar imagens
-	data.images.forEach(async (item) => {
+	for (let i = 0; i <= data.images.length; i++) {
+		let img = data.images[i];
+		if (Array.isArray(img.path)) {
+			// Se item.path for uma lista, carregar e juntar os arquivos
+			const combinedBlob = await fetchAndCombineParts(img.path);
+			blobUrl = URL.createObjectURL(combinedBlob);
+			console.log(`${img.path}: ${blobUrl}`)
+		} else if (typeof img.path === "string") {
+			// Se item.path for uma string, usar diretamente
+			blobUrl = img.path;
+		}
+
+		if (blobUrl && !blobUrl.includes("iframe")) {
+			const imgElement = document.createElement("img")
+			imgElement.src = blobUrl;
+			imgElement.setAttribute("data-image", blobUrl);
+			imgElement.addEventListener("click", () => openModal(blobUrl));
+			imgElement.classList.add("img");
+			imgElement.addEventListener("load", () => adjustImages(imgElement));
+			//imgElement.style.width = '10%'
+			imgElement.style.flexGrow = 1
+			gallery.appendChild(imgElement);
+		} else if (blobUrl) {
+			const link = document.createElement("a");
+			link.innerHTML = blobUrl;
+			gallery.appendChild(link);
+		}
+	}
+
+	/*data.images.forEach(async (item) => {
 		let blobUrl;
 		if (Array.isArray(item.path)) {
 			// Se item.path for uma lista, carregar e juntar os arquivos
@@ -124,23 +153,19 @@ async function loadCategoryImages(data, gallery) {
 		}
 
 		if (blobUrl && !blobUrl.includes("iframe")) {
-			const link = document.createElement("a");
-			link.setAttribute("href", blobUrl);
-			link.setAttribute("download", "");
 			const imgElement = document.createElement("img")
 			imgElement.src = blobUrl;
 			imgElement.setAttribute("data-image", blobUrl);
 			imgElement.addEventListener("click", () => openModal(blobUrl));
 			imgElement.classList.add("img");
 			imgElement.addEventListener("load", () => adjustImages(imgElement));
-			link.appendChild(imgElement);
-			gallery.appendChild(link);
+			gallery.appendChild(imgElement);
 		} else if (blobUrl) {
 			const link = document.createElement("a");
 			link.innerHTML = blobUrl;
 			gallery.appendChild(link);
 		}
-	});
+	});*/
 
 	// Processar vídeos
 	data.videos.forEach(async (item) => {
@@ -174,27 +199,22 @@ async function loadCategoryImages(data, gallery) {
 function adjustImages(image) {
   const gallery = document.getElementById("gallery");
 
-  // Não será necessário mais manipular o layout de colunas ou flex
-  gallery.style.columnCount = 'auto'; // Remover a definição de colunas
-
   // Ajustar o layout dependendo da categoria
   if (document.querySelector(".is-active").innerHTML.includes("Special")) {
     gallery.style.flexDirection = 'column'; // Para a categoria especial, as imagens ocupam toda a largura
     gallery.style.justifyContent = 'flex-start';
-    gallery.style.alignItems = 'center'; // Centraliza as imagens
-  } else {
+  } /*else {
     gallery.style.flexDirection = 'row'; // Distribui imagens horizontalmente
     gallery.style.justifyContent = 'flex-start';
-  }
+  }*/
 
   if (image) {
-    const width = image.width;
-    const height = image.height;
+    const width = image.naturalWidth;
+    const height = image.naturalHeight;
 
     // Ajusta a imagem com base no tamanho
     if (width > height) {
-      image.classList.add("full");
-      image.parentElement.classList.add("full");
+		image.style.width = '40%'
     }
   }
 }
