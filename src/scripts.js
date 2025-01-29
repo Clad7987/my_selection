@@ -65,7 +65,7 @@ function loadGallery(category) {
 	}
 }
 
-function adjustImages(image) {
+/*function adjustImages(image) {
 	const gallery = document.getElementById("gallery");
 	if (document.querySelector(".is-active").innerHTML.includes("Special")) {
 		gallery.style.columnCount = 1;
@@ -170,7 +170,35 @@ async function loadCategoryImages(data, gallery) {
 			gallery.appendChild(link);
 		}
 	});
+}*/
+function adjustImages(image) {
+  const gallery = document.getElementById("gallery");
+
+  // Não será necessário mais manipular o layout de colunas ou flex
+  gallery.style.columnCount = 'auto'; // Remover a definição de colunas
+
+  // Ajustar o layout dependendo da categoria
+  if (document.querySelector(".is-active").innerHTML.includes("Special")) {
+    gallery.style.flexDirection = 'column'; // Para a categoria especial, as imagens ocupam toda a largura
+    gallery.style.justifyContent = 'flex-start';
+    gallery.style.alignItems = 'center'; // Centraliza as imagens
+  } else {
+    gallery.style.flexDirection = 'row'; // Distribui imagens horizontalmente
+    gallery.style.justifyContent = 'flex-start';
+  }
+
+  if (image) {
+    const width = image.width;
+    const height = image.height;
+
+    // Ajusta a imagem com base no tamanho
+    if (width > height) {
+      image.classList.add("full");
+      image.parentElement.classList.add("full");
+    }
+  }
 }
+
 
 
 // Função para abrir modal com a imagem clicada
