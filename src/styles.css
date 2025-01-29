@@ -1,4 +1,4 @@
-.text-white {
+/*.text-white {
 	color: white !important;
 }
 
@@ -18,7 +18,7 @@ padding: 5px;
 
 		& img {
 			width: 100%;
-			/* margin-bottom: 5px; */
+			/* margin-bottom: 5px; 
 			transition: transform 0.3s ease-in-out;
 			border-radius: 5px;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -28,4 +28,41 @@ padding: 5px;
 			transform: scale(0.95);
 		}
 	}
+}*/
+.gallery {
+  display: flex;
+  flex-wrap: wrap; /* Permite que as imagens se ajustem para várias linhas */
+  justify-content: flex-start; /* Alinha as imagens ao topo */
+  margin: 0;
+}
+
+.gallery a {
+  display: block;
+  margin: 5px; /* Espaçamento entre as imagens */
+}
+
+.gallery img {
+  width: calc(33.333% - 10px); /* Tamanho da imagem (3 por linha, ajustando para espaçamento) */
+  height: auto; /* Mantém a proporção da imagem */
+  transition: transform 0.3s ease-in-out;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  flex-grow: 1; /* Faz com que a imagem "cresça" para ocupar o espaço disponível */
+  min-height: 200px; /* Define uma altura mínima para as imagens */
+}
+
+.gallery img:hover {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .gallery img {
+    width: calc(50% - 10px); /* Para telas menores, ocupa metade da largura */
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery img {
+    width: 100%; /* Para telas muito pequenas, ocupa toda a largura */
+  }
 }
