@@ -87,7 +87,7 @@ function loadGallery(category) {
 			image.parentElement.classList.add("full");
 		}
 	}
-}
+}*/
 
 async function loadCategoryImages(data, gallery) {
 	// Função auxiliar para carregar e juntar arquivos binários
@@ -170,7 +170,7 @@ async function loadCategoryImages(data, gallery) {
 			gallery.appendChild(link);
 		}
 	});
-}*/
+}
 function adjustImages(image) {
   const gallery = document.getElementById("gallery");
 
