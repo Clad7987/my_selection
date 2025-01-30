@@ -25,14 +25,8 @@
 				<!-- As abas serão preenchidas dinamicamente -->
 			</div>
 
-			<div  class="select is-rounded">
-				<select  id="columnCount" onchange="changeColumnCount()">
-					<option value="1">1</option>
-					<option value="3">3</option>
-					<option selected value="5">5</option>
-					<option value="10">10</option>
-					<option value="15">15</option>
-				</select>
+			<div  class="is-rounded">
+				<input onchange="changeColumnCount()" style="width: 100%;padding: 0 1rem;" type="range" name="img-width" id="img-width" min="1" step="10" max="90" value="50">
 			</div>
 
 			<div class="gallery" id="gallery"></div>

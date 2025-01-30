@@ -263,8 +263,8 @@ function openModal(imagePath) {
 }
 
 function changeColumnCount() {
-	let cc = document.getElementById("columnCount").value;
-	document.getElementById("gallery").style.columnCount = parseInt(cc);
+	let imgWidth = document.getElementById("img-width").value
+	document.querySelectorAll('img').forEach(item => item.style.width = `${imgWidth}dvw`)
 }
 
 // Chamar a função para carregar imagens quando a página carrega
