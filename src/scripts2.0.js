@@ -29,14 +29,35 @@ function createMenu() {
     document.querySelector('#tabs').className = "menu"
 }
 
-function displayImages(category='advoree') {
+function displayImages(category = 'advoree') {
     let gallery = document.querySelector("#gallery")
-    
+
     let items = allData[category];
     items.forEach(item => {
-        let img = document.createElement('img')
-        img.src = item
-        gallery.appendChild(img)
+        if (item.includes('mp4')) {
+            let vid = document.createElement('video')
+            let src = document.createElement('source')
+            src.setAttribute('src', item)
+            vid.setAttribute('controls', '')
+            vid.style.width = '100%'
+            vid.appendChild(src)
+            gallery.appendChild(vid)
+        } else {
+            let img = document.createElement('img')
+            img.src = item
+            gallery.appendChild(img)
+        }
+    })
+
+    adjustItens()
+}
+
+function adjustItens() {
+    let imgs = document.querySelectorAll('img')
+    imgs.forEach(item => {
+        // item.style.width = 'fit-content'
+        // item.style.height = 'fit-content'
+        // item.style.margin = 0
     })
 }
 
