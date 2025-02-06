@@ -17,33 +17,23 @@
 
 <body>
 	<section class="">
-		<div class="has-background-primary-00">
-			<h1 class="title has-text-centered text-white">Image Gallery</h1>
+		<div class="has-background-primary-00" style="display: flex;position: static;">
 			<!-- Tabs para categorias -->
 			<div class="tabs is-centered" id="tabs">
 				<ul></ul>
 				<!-- As abas serão preenchidas dinamicamente -->
+				<div class="is-rounded">
+					<input onchange="changeColumnCount()" style="width: 100%;padding: 0 1rem;" type="range"
+						name="img-width" id="img-width" min="1" step="10" max="90" value="50">
+				</div>
 			</div>
 
-			<div  class="is-rounded">
-				<input onchange="changeColumnCount()" style="width: 100%;padding: 0 1rem;" type="range" name="img-width" id="img-width" min="1" step="10" max="90" value="50">
-			</div>
 
-			<div class="gallery" id="gallery"></div>
+
+			<div class="gallery" id="gallery" style="justify-content: center;"></div>
 			<!-- Galeria dinâmica -->
 		</div>
 	</section>
-
-	<!-- Modal -->
-	<div class="modal" id="imageModal">
-		<div class="modal-background"></div>
-		<div class="modal-content">
-			<img id="modalImage" src="" alt="Imagem" />
-			<button id="slideshowBtn" class="button is-primary">Iniciar Slideshow</button>
-		</div>
-		<button class="modal-close is-large" aria-label="close" id="closeModal"></button>
-	</div>
-
 	<!-- Rodapé legal -->
 	<footer class="footer">
 		<div class="content has-text-centered">
@@ -60,7 +50,8 @@
 	</footer>
 
 	<!-- Importando o JavaScript externo -->
-	<script src="src/scripts.js"></script>
+	<!-- <script src="src/scripts.js"></script> -->
+	<script src="src/scripts2.0.js"></script>
 </body>
 
 </html>
